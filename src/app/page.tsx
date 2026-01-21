@@ -68,7 +68,7 @@ export default async function Home() {
       {/* News Section */}
       <section className="py-16">
         <div className="mx-auto max-w-5xl px-6">
-          <h2 className="text-xs font-mono uppercase tracking-wide text-[var(--muted)] mb-8">Latest News</h2>
+          <h2 className="text-2xl font-mono uppercase tracking-wide text-[var(--orange)] mb-8">Latest News</h2>
           <div className="space-y-0 divide-y divide-[var(--cloud)]/50">
             {displayNews.map((item) => (
               <Link
@@ -77,10 +77,10 @@ export default async function Home() {
                 className="block py-5 group"
               >
                 <div className="flex items-baseline gap-4">
-                  <span className="font-mono text-xs text-[var(--muted)] shrink-0 w-28">{formatDate(item.date)}</span>
+                  <span className="font-mono text-xs text-[var(--muted)] group-hover:text-[var(--orange)] transition-colors shrink-0 w-28">{formatDate(item.date)}</span>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-base text-[var(--black)] group-hover:text-[var(--pro-indigo)] transition-colors">{item.title}</h3>
-                    <p className="mt-1 text-sm text-[var(--muted)] font-light line-clamp-1">{item.description}</p>
+                    <h3 className="text-base text-[var(--black)] group-hover:text-[var(--orange)] transition-colors">{item.title}</h3>
+                    <p className="mt-1 text-sm text-[var(--muted)] font-light line-clamp-1 group-hover:text-[var(--orange)] transition-colors">{item.description}</p>
                   </div>
                 </div>
               </Link>
@@ -94,7 +94,7 @@ export default async function Home() {
           <div className="mt-8">
             <Link
               href="/blog"
-              className="font-mono text-xs uppercase tracking-wide text-[var(--muted)] hover:text-[var(--pro-indigo)] transition-colors"
+              className="font-mono text-xs uppercase tracking-wide text-[var(--muted)] hover:text-[var(--orange)] transition-colors"
             >
               View all →
             </Link>
@@ -105,16 +105,16 @@ export default async function Home() {
       {/* Research Highlights */}
       <section className="border-t border-[var(--cloud)] py-16">
         <div className="mx-auto max-w-5xl px-6">
-          <h2 className="text-xs font-mono uppercase tracking-wide text-[var(--muted)] mb-8">Research</h2>
+          <h2 className="text-2xl font-mono uppercase tracking-wide text-[var(--purple)] mb-8">Research</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {displayResearch.map((item) => (
-              <div key={item.id} className="border border-[var(--cloud)] p-5 hover:border-[var(--pro-indigo)]/30 transition-colors">
-                <h3 className="font-mono text-sm text-[var(--black)]">{item.title}</h3>
-                <p className="mt-2 text-sm text-[var(--muted)] font-light">{item.description}</p>
+              <div key={item.id} className="group border border-[var(--cloud)] p-5 hover:border-[var(--purple)]/30 transition-colors">
+                <h3 className="font-mono text-sm text-[var(--black)] group-hover:text-[var(--purple)] transition-colors">{item.title}</h3>
+                <p className="mt-2 text-sm text-[var(--muted)] font-light group-hover:text-[var(--purple)] transition-colors">{item.description}</p>
                 {item.tags && item.tags.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-1">
                     {item.tags.map((tag) => (
-                      <span key={tag} className="font-mono text-xs text-[var(--pro-indigo)]">
+                      <span key={tag} className="font-mono text-xs text-[var(--purple)]">
                         [{tag}]
                       </span>
                     ))}
@@ -126,7 +126,7 @@ export default async function Home() {
           <div className="mt-8">
             <Link
               href="/research"
-              className="font-mono text-xs uppercase tracking-wide text-[var(--muted)] hover:text-[var(--pro-indigo)] transition-colors"
+              className="font-mono text-xs uppercase tracking-wide text-[var(--muted)] hover:text-[var(--purple)] transition-colors"
             >
               View all →
             </Link>

@@ -8,7 +8,7 @@ export default function Footer() {
           <div>
             <h3 className="font-mono text-xs uppercase tracking-wide text-[var(--black)]">Protege Data Lab</h3>
             <p className="mt-3 text-sm text-[var(--muted)] font-light">
-              Advancing research in data science and machine learning.
+              Tackling the fundamental challenges in data for AI.
             </p>
           </div>
           <div>
@@ -22,9 +22,9 @@ export default function Footer() {
           </div>
           <div>
             <h4 className="font-mono text-xs uppercase tracking-wide text-[var(--black)]">Contact</h4>
-            <p className="mt-3 text-sm text-[var(--muted)] font-light">
-              contact@protegedatalab.com
-            </p>
+            <a href="mailto:data@withprotege.ai" className="mt-3 block text-sm text-[var(--muted)] font-light hover:text-[var(--pro-indigo)] transition-colors">
+              data@withprotege.ai
+            </a>
           </div>
         </div>
         <div className="mt-10 border-t border-[var(--cloud)] pt-6 text-xs text-[var(--muted)] font-mono">
