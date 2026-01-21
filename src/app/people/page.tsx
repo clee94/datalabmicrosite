@@ -2,7 +2,7 @@ import { getPeople, Person } from '@/lib/notion';
 
 export const revalidate = 60;
 
-function PersonCard({ person, showYear = false }: { person: Person; showYear?: boolean }) {
+function PersonCard({ person }: { person: Person }) {
   return (
     <div className="border border-[var(--cloud)] p-5 hover:border-[var(--pro-indigo)]/30 transition-colors">
       <div className="flex items-start gap-4">
@@ -11,9 +11,8 @@ function PersonCard({ person, showYear = false }: { person: Person; showYear?: b
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-mono text-sm text-[var(--black)]">{person.name}</h3>
-          <p className="text-xs text-[var(--muted)] mt-0.5">
+          <p className="text-xs text-[var(--pro-indigo)] mt-0.5">
             {person.role}
-            {showYear && person.year && ` / ${person.year}`}
           </p>
         </div>
       </div>
@@ -44,23 +43,17 @@ function PersonCard({ person, showYear = false }: { person: Person; showYear?: b
 export default async function PeoplePage() {
   const people = await getPeople().catch(() => []);
 
-  // Group people by role
-  const faculty = people.filter((p) => p.role === 'Faculty');
-  const phdStudents = people.filter((p) => p.role === 'PhD Student');
-  const postdocs = people.filter((p) => p.role === 'Postdoc');
+  // Separate team members from alumni
+  const team = people.filter((p) => p.role !== 'Alumni');
   const alumni = people.filter((p) => p.role === 'Alumni');
 
   // Placeholder data if no Notion data
   const showPlaceholder = people.length === 0;
-  const placeholderFaculty = [
-    { id: '1', name: 'Dr. Jane Smith', role: 'Faculty', bio: 'Professor of Computer Science. Research interests include data systems, machine learning, and scalable computing.', email: 'jsmith@university.edu', website: 'https://example.com', order: 0 },
-  ];
-  const placeholderPhd = [
-    { id: '2', name: 'Alex Johnson', role: 'PhD Student', bio: 'Research focus: Large-scale data processing systems.', year: '3rd Year', order: 0 },
-    { id: '3', name: 'Maria Garcia', role: 'PhD Student', bio: 'Research focus: Machine learning for data quality.', year: '2nd Year', order: 1 },
-  ];
-  const placeholderAlumni = [
-    { id: '4', name: 'Dr. Sarah Williams', role: 'Alumni', bio: '', currentPosition: 'Research Scientist at Google', order: 0 },
+  const placeholderTeam = [
+    { id: '1', name: 'Engy Ziedan, Ph.D.', role: 'Assistant Professor', bio: 'Indiana University Assistant Professor and Applied Economist with training in econometrics (statistics + microeconomic theory)', order: 1 },
+    { id: '2', name: 'Si-Yuan Kong, Ph.D.', role: 'Senior Scientist', bio: 'UC Irvine-trained machine learning senior scientist (formerly at Activision)', order: 2 },
+    { id: '3', name: 'Allison Fox', role: 'Research Scientist', bio: 'UC Berkeley-trained measurement theory expert with AI safety and data error experience (formerly at Mathematica)', order: 3 },
+    { id: '4', name: 'Sarah Tucker', role: 'Researcher', bio: 'Columbia University trained. Qualitative and quantitative researcher with healthcare data experience (formerly at Datavant)', order: 4 },
   ];
 
   return (
@@ -68,7 +61,7 @@ export default async function PeoplePage() {
       <div className="mx-auto max-w-5xl px-6">
         <h1 className="text-3xl tracking-tight text-[var(--black)]">People</h1>
         <p className="mt-3 text-[var(--muted)] font-light">
-          Meet the researchers and students of Protege Data Lab.
+          Meet the team at Protege Data Lab.
         </p>
 
         {showPlaceholder && (
@@ -77,47 +70,30 @@ export default async function PeoplePage() {
           </p>
         )}
 
-        {/* Faculty */}
+        {/* Team */}
         <section className="mt-14">
-          <h2 className="text-xs font-mono uppercase tracking-wide text-[var(--muted)] mb-6">Faculty</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {(showPlaceholder ? placeholderFaculty : faculty).map((person) => (
+          <h2 className="text-xs font-mono uppercase tracking-wide text-[var(--muted)] mb-6">Team</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {(showPlaceholder ? placeholderTeam : team).map((person) => (
               <PersonCard key={person.id} person={person as Person} />
-            ))}
-          </div>
-        </section>
-
-        {/* Postdocs */}
-        {(postdocs.length > 0) && (
-          <section className="mt-14">
-            <h2 className="text-xs font-mono uppercase tracking-wide text-[var(--muted)] mb-6">Postdoctoral Researchers</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {postdocs.map((person) => (
-                <PersonCard key={person.id} person={person} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* PhD Students */}
-        <section className="mt-14">
-          <h2 className="text-xs font-mono uppercase tracking-wide text-[var(--muted)] mb-6">PhD Students</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {(showPlaceholder ? placeholderPhd : phdStudents).map((person) => (
-              <PersonCard key={person.id} person={person as Person} showYear />
             ))}
           </div>
         </section>
 
         {/* Alumni */}
-        <section className="mt-14">
-          <h2 className="text-xs font-mono uppercase tracking-wide text-[var(--muted)] mb-6">Alumni</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {(showPlaceholder ? placeholderAlumni : alumni).map((person) => (
-              <PersonCard key={person.id} person={person as Person} />
-            ))}
-          </div>
-        </section>
+        {(alumni.length > 0 || showPlaceholder) && (
+          <section className="mt-14">
+            <h2 className="text-xs font-mono uppercase tracking-wide text-[var(--muted)] mb-6">Alumni</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {alumni.map((person) => (
+                <PersonCard key={person.id} person={person} />
+              ))}
+            </div>
+            {alumni.length === 0 && showPlaceholder && (
+              <p className="font-mono text-sm text-[var(--muted)]">// No alumni yet</p>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );
