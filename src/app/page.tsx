@@ -66,12 +66,13 @@ export default async function Home() {
                 </Link>
               </div>
             </div>
-            <div className="relative h-64 lg:h-80 overflow-hidden">
+            <div className="relative h-auto lg:min-h-[400px] overflow-hidden flex items-center justify-center bg-[#0a0a0a]">
               <Image
                 src="/images/data-visualization-2.png"
                 alt="Scatter graph showing AI model comparisons"
-                fill
-                className="object-cover object-[0%_50%]"
+                width={667}
+                height={763}
+                className="w-full h-auto max-h-[500px] object-contain"
                 priority
               />
             </div>
