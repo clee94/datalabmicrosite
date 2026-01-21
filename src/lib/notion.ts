@@ -21,6 +21,10 @@ export interface NewsItem {
   title: string;
   date: string;
   description: string;
+  author?: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface Person {
@@ -64,6 +68,11 @@ async function queryDatabase(databaseId: string, filter?: any, sorts?: any[]): P
   });
 }
 
+// Get page by ID
+async function getPage(pageId: string): Promise<any> {
+  return await (notion as any).pages.retrieve({ page_id: pageId });
+}
+
 // Fetch News
 export async function getNews(): Promise<NewsItem[]> {
   const response = await queryDatabase(
@@ -72,12 +81,35 @@ export async function getNews(): Promise<NewsItem[]> {
     [{ property: 'Date', direction: 'descending' }]
   );
 
-  return response.results.map((page: any) => ({
-    id: page.id,
-    title: getRichText(page.properties.Title?.title),
-    date: page.properties.Date?.date?.start || '',
-    description: getRichText(page.properties.Description?.rich_text),
-  }));
+  // Fetch author details for each news item
+  const newsItems = await Promise.all(
+    response.results.map(async (page: any) => {
+      const authorRelation = page.properties.Author?.relation;
+      let author: { id: string; name: string } | undefined;
+
+      if (authorRelation && authorRelation.length > 0) {
+        try {
+          const authorPage = await getPage(authorRelation[0].id);
+          author = {
+            id: authorPage.id,
+            name: getRichText(authorPage.properties.Name?.title),
+          };
+        } catch {
+          // Author fetch failed, leave undefined
+        }
+      }
+
+      return {
+        id: page.id,
+        title: getRichText(page.properties.Title?.title),
+        date: page.properties.Date?.date?.start || '',
+        description: getRichText(page.properties.Description?.rich_text),
+        author,
+      };
+    })
+  );
+
+  return newsItems;
 }
 
 // Fetch People

@@ -71,7 +71,15 @@ export default async function Home() {
           <div className="mt-8 space-y-6">
             {displayNews.map((item) => (
               <div key={item.id} className="border-l-4 border-blue-600 pl-4">
-                <p className="text-sm font-medium text-blue-600">{formatDate(item.date)}</p>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-blue-600">{formatDate(item.date)}</span>
+                  {item.author && (
+                    <>
+                      <span className="text-gray-400">•</span>
+                      <span className="text-gray-600">{item.author.name}</span>
+                    </>
+                  )}
+                </div>
                 <h3 className="mt-1 text-lg font-semibold text-gray-900">{item.title}</h3>
                 <p className="mt-1 text-gray-600">{item.description}</p>
               </div>
