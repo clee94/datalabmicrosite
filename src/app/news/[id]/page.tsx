@@ -16,39 +16,39 @@ export async function generateStaticParams() {
 function BlockRenderer({ block }: { block: ContentBlock }) {
   switch (block.type) {
     case 'heading_1':
-      return <h1 className="text-2xl text-neutral-900 mt-10 mb-4">{block.content}</h1>;
+      return <h1 className="text-2xl text-[var(--black)] mt-10 mb-4">{block.content}</h1>;
     case 'heading_2':
-      return <h2 className="text-xl text-neutral-900 mt-8 mb-3">{block.content}</h2>;
+      return <h2 className="text-xl text-[var(--black)] mt-8 mb-3">{block.content}</h2>;
     case 'heading_3':
-      return <h3 className="text-lg text-neutral-900 mt-6 mb-2">{block.content}</h3>;
+      return <h3 className="text-lg text-[var(--black)] mt-6 mb-2">{block.content}</h3>;
     case 'paragraph':
       return block.content ? (
-        <p className="text-neutral-600 font-light leading-relaxed mb-5">{block.content}</p>
+        <p className="text-[var(--muted)] font-light leading-relaxed mb-5">{block.content}</p>
       ) : (
         <div className="h-5" />
       );
     case 'bulleted_list_item':
       return (
-        <li className="text-neutral-600 font-light ml-5 mb-2 list-disc">{block.content}</li>
+        <li className="text-[var(--muted)] font-light ml-5 mb-2 list-disc">{block.content}</li>
       );
     case 'numbered_list_item':
       return (
-        <li className="text-neutral-600 font-light ml-5 mb-2 list-decimal">{block.content}</li>
+        <li className="text-[var(--muted)] font-light ml-5 mb-2 list-decimal">{block.content}</li>
       );
     case 'quote':
       return (
-        <blockquote className="border-l border-neutral-300 pl-5 py-1 my-6 text-neutral-500 font-light italic">
+        <blockquote className="border-l border-[var(--pro-indigo)]/30 pl-5 py-1 my-6 text-[var(--muted)] font-light italic">
           {block.content}
         </blockquote>
       );
     case 'callout':
       return (
-        <div className="border border-neutral-200 p-4 my-6">
-          <p className="text-neutral-600 font-light">{block.content}</p>
+        <div className="border border-[var(--cloud)] bg-[var(--powder)]/10 p-4 my-6">
+          <p className="text-[var(--muted)] font-light">{block.content}</p>
         </div>
       );
     case 'divider':
-      return <hr className="my-10 border-neutral-200" />;
+      return <hr className="my-10 border-[var(--cloud)]" />;
     default:
       return null;
   }
@@ -86,14 +86,14 @@ export default async function NewsArticlePage({
         {/* Back link */}
         <Link
           href="/blog"
-          className="font-mono text-xs uppercase tracking-wide text-neutral-400 hover:text-neutral-900 transition-colors mb-10 inline-block"
+          className="font-mono text-xs uppercase tracking-wide text-[var(--muted)] hover:text-[var(--pro-indigo)] transition-colors mb-10 inline-block"
         >
           ← Blog
         </Link>
 
         {/* Article header */}
         <header className="mb-10">
-          <div className="flex items-center gap-3 font-mono text-xs text-neutral-400 mb-4">
+          <div className="flex items-center gap-3 font-mono text-xs text-[var(--muted)] mb-4">
             <time>{formatDate(article.date)}</time>
             {article.author && (
               <>
@@ -102,11 +102,11 @@ export default async function NewsArticlePage({
               </>
             )}
           </div>
-          <h1 className="text-3xl tracking-tight text-neutral-900 leading-tight">
+          <h1 className="text-3xl tracking-tight text-[var(--black)] leading-tight">
             {article.title}
           </h1>
           {article.description && (
-            <p className="mt-4 text-neutral-500 font-light border-l border-neutral-200 pl-4">
+            <p className="mt-4 text-[var(--muted)] font-light border-l border-[var(--cloud)] pl-4">
               {article.description}
             </p>
           )}
@@ -119,17 +119,17 @@ export default async function NewsArticlePage({
               <BlockRenderer key={block.id} block={block} />
             ))
           ) : (
-            <p className="font-mono text-sm text-neutral-400">
+            <p className="font-mono text-sm text-[var(--muted)]">
               // Content coming soon
             </p>
           )}
         </article>
 
         {/* Footer */}
-        <footer className="mt-14 pt-8 border-t border-neutral-200">
+        <footer className="mt-14 pt-8 border-t border-[var(--cloud)]">
           <Link
             href="/blog"
-            className="font-mono text-xs uppercase tracking-wide text-neutral-400 hover:text-neutral-900 transition-colors"
+            className="font-mono text-xs uppercase tracking-wide text-[var(--muted)] hover:text-[var(--pro-indigo)] transition-colors"
           >
             ← All articles
           </Link>

@@ -26,17 +26,17 @@ export default async function BlogPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-5xl px-6">
-        <h1 className="text-3xl tracking-tight text-neutral-900">Blog</h1>
-        <p className="mt-3 text-neutral-500 font-light">
+        <h1 className="text-3xl tracking-tight text-[var(--black)]">Blog</h1>
+        <p className="mt-3 text-[var(--muted)] font-light">
           News, insights, and updates from Protege Data Lab.
         </p>
 
         {articles.length === 0 ? (
-          <p className="mt-12 font-mono text-sm text-neutral-400">
+          <p className="mt-12 font-mono text-sm text-[var(--muted)]">
             // No articles yet
           </p>
         ) : (
-          <div className="mt-12 divide-y divide-neutral-100">
+          <div className="mt-12 divide-y divide-[var(--cloud)]/50">
             {articles.map((article) => (
               <Link
                 key={article.id}
@@ -44,7 +44,7 @@ export default async function BlogPage() {
                 className="block py-6 group"
               >
                 <article>
-                  <div className="flex items-center gap-3 text-xs font-mono text-neutral-400">
+                  <div className="flex items-center gap-3 text-xs font-mono text-[var(--muted)]">
                     <time>{formatDate(article.date)}</time>
                     {article.author && (
                       <>
@@ -53,10 +53,10 @@ export default async function BlogPage() {
                       </>
                     )}
                   </div>
-                  <h2 className="mt-2 text-xl text-neutral-900 group-hover:text-neutral-600 transition-colors">
+                  <h2 className="mt-2 text-xl text-[var(--black)] group-hover:text-[var(--pro-indigo)] transition-colors">
                     {article.title}
                   </h2>
-                  <p className="mt-2 text-neutral-500 font-light line-clamp-2">
+                  <p className="mt-2 text-[var(--muted)] font-light line-clamp-2">
                     {article.description}
                   </p>
                 </article>

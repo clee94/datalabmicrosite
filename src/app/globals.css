@@ -30,11 +30,27 @@
 }
 
 :root {
-  --background: #fafafa;
-  --foreground: #1a1a1a;
-  --muted: #6b6b6b;
-  --border: #e0e0e0;
-  --accent: #0a0a0a;
+  /* Primary palette */
+  --pro-indigo: #683EF3;
+  --black: #060A0C;
+  --white: #FFFFFF;
+  --cloud: #E5E5E5;
+  --sky: #A6C5F2;
+  --powder: #CACEF2;
+
+  /* Secondary palette */
+  --purple: #5F1490;
+  --blue: #4575EC;
+  --orange: #F4624A;
+  --yellow: #F7CD69;
+  --sand: #D6C09D;
+
+  /* Semantic mappings */
+  --background: var(--white);
+  --foreground: var(--black);
+  --muted: #5a5a5a;
+  --border: var(--cloud);
+  --accent: var(--pro-indigo);
 
   --font-mono: 'Suisse Intl Mono', ui-monospace, monospace;
   --font-sans: 'Plain', system-ui, sans-serif;
