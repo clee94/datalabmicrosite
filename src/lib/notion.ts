@@ -269,7 +269,7 @@ export async function getPeople(): Promise<Person[]> {
   return response.results.map((page: any) => ({
     id: page.id,
     name: getRichText(page.properties.Name?.title),
-    role: page.properties.Role?.select?.name || '',
+    role: page.properties.Role?.select?.name || getRichText(page.properties.Role?.rich_text) || '',
     bio: getRichText(page.properties.Bio?.rich_text),
     email: page.properties.Email?.email || undefined,
     website: page.properties.Website?.url || undefined,
