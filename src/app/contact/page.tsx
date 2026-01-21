@@ -40,12 +40,12 @@ export default function ContactPage() {
           </div>
 
           {/* Visual element */}
-          <div className="relative h-64 lg:h-80 overflow-hidden border border-[var(--cloud)] hidden lg:block">
+          <div className="relative aspect-square overflow-hidden border border-[var(--cloud)] hidden lg:block">
             <Image
-              src="/images/icons.png"
-              alt="Network and operations icons"
+              src="/images/illustrations.png"
+              alt="Pixelated illustrations"
               fill
-              className="object-cover object-center"
+              className="object-cover object-[100%_100%] scale-150"
             />
           </div>
         </div>
