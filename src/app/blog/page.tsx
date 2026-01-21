@@ -14,7 +14,7 @@ export default async function BlogPage() {
     try {
       const date = new Date(dateStr);
       return date.toLocaleDateString('en-US', {
-        month: 'long',
+        month: 'short',
         day: 'numeric',
         year: 'numeric',
       });
@@ -25,43 +25,40 @@ export default async function BlogPage() {
 
   return (
     <div className="py-16">
-      <div className="mx-auto max-w-6xl px-6">
-        <h1 className="text-4xl font-bold text-gray-900">Blog</h1>
-        <p className="mt-4 text-lg text-gray-600">
+      <div className="mx-auto max-w-5xl px-6">
+        <h1 className="text-3xl tracking-tight text-neutral-900">Blog</h1>
+        <p className="mt-3 text-neutral-500 font-light">
           News, insights, and updates from Protege Data Lab.
         </p>
 
         {articles.length === 0 ? (
-          <p className="mt-8 text-gray-500 italic">
-            No articles yet. Add articles in Notion to see them here.
+          <p className="mt-12 font-mono text-sm text-neutral-400">
+            // No articles yet
           </p>
         ) : (
-          <div className="mt-12 space-y-8">
+          <div className="mt-12 divide-y divide-neutral-100">
             {articles.map((article) => (
               <Link
                 key={article.id}
                 href={`/news/${article.id}`}
-                className="block group"
+                className="block py-6 group"
               >
-                <article className="border-b border-gray-200 pb-8 hover:bg-gray-50 -mx-4 px-4 py-4 transition-colors rounded-lg">
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                <article>
+                  <div className="flex items-center gap-3 text-xs font-mono text-neutral-400">
                     <time>{formatDate(article.date)}</time>
                     {article.author && (
                       <>
-                        <span>•</span>
+                        <span>/</span>
                         <span>{article.author.name}</span>
                       </>
                     )}
                   </div>
-                  <h2 className="mt-2 text-2xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                  <h2 className="mt-2 text-xl text-neutral-900 group-hover:text-neutral-600 transition-colors">
                     {article.title}
                   </h2>
-                  <p className="mt-2 text-gray-600 line-clamp-2">
+                  <p className="mt-2 text-neutral-500 font-light line-clamp-2">
                     {article.description}
                   </p>
-                  <span className="mt-3 inline-block text-sm font-medium text-blue-600">
-                    Read more →
-                  </span>
                 </article>
               </Link>
             ))}

@@ -15,27 +15,27 @@ export default function Navigation() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="text-xl font-bold text-gray-900">
+    <header className="sticky top-0 z-50 w-full border-b border-neutral-200 bg-neutral-50">
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
+        <Link href="/" className="font-mono text-sm tracking-tight text-neutral-900 uppercase">
           Protege Data Lab
         </Link>
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm font-medium transition-colors hover:text-blue-600 ${
-                pathname === item.href ? 'text-blue-600' : 'text-gray-600'
+              className={`font-mono text-xs uppercase tracking-wide transition-colors hover:text-neutral-900 ${
+                pathname === item.href ? 'text-neutral-900' : 'text-neutral-500'
               }`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <button className="md:hidden p-2">
-          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        <button className="md:hidden p-2 text-neutral-600">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </div>

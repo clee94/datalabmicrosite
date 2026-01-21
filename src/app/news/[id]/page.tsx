@@ -16,39 +16,39 @@ export async function generateStaticParams() {
 function BlockRenderer({ block }: { block: ContentBlock }) {
   switch (block.type) {
     case 'heading_1':
-      return <h1 className="text-3xl font-bold text-gray-900 mt-8 mb-4">{block.content}</h1>;
+      return <h1 className="text-2xl text-neutral-900 mt-10 mb-4">{block.content}</h1>;
     case 'heading_2':
-      return <h2 className="text-2xl font-bold text-gray-900 mt-6 mb-3">{block.content}</h2>;
+      return <h2 className="text-xl text-neutral-900 mt-8 mb-3">{block.content}</h2>;
     case 'heading_3':
-      return <h3 className="text-xl font-semibold text-gray-900 mt-4 mb-2">{block.content}</h3>;
+      return <h3 className="text-lg text-neutral-900 mt-6 mb-2">{block.content}</h3>;
     case 'paragraph':
       return block.content ? (
-        <p className="text-gray-700 leading-relaxed mb-4">{block.content}</p>
+        <p className="text-neutral-600 font-light leading-relaxed mb-5">{block.content}</p>
       ) : (
-        <div className="h-4" />
+        <div className="h-5" />
       );
     case 'bulleted_list_item':
       return (
-        <li className="text-gray-700 ml-6 mb-2 list-disc">{block.content}</li>
+        <li className="text-neutral-600 font-light ml-5 mb-2 list-disc">{block.content}</li>
       );
     case 'numbered_list_item':
       return (
-        <li className="text-gray-700 ml-6 mb-2 list-decimal">{block.content}</li>
+        <li className="text-neutral-600 font-light ml-5 mb-2 list-decimal">{block.content}</li>
       );
     case 'quote':
       return (
-        <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-4 text-gray-600 italic">
+        <blockquote className="border-l border-neutral-300 pl-5 py-1 my-6 text-neutral-500 font-light italic">
           {block.content}
         </blockquote>
       );
     case 'callout':
       return (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-4">
-          <p className="text-gray-700">{block.content}</p>
+        <div className="border border-neutral-200 p-4 my-6">
+          <p className="text-neutral-600 font-light">{block.content}</p>
         </div>
       );
     case 'divider':
-      return <hr className="my-8 border-gray-200" />;
+      return <hr className="my-10 border-neutral-200" />;
     default:
       return null;
   }
@@ -71,7 +71,7 @@ export default async function NewsArticlePage({
     try {
       const date = new Date(dateStr);
       return date.toLocaleDateString('en-US', {
-        month: 'long',
+        month: 'short',
         day: 'numeric',
         year: 'numeric',
       });
@@ -82,56 +82,56 @@ export default async function NewsArticlePage({
 
   return (
     <div className="py-16">
-      <div className="mx-auto max-w-3xl px-6">
+      <div className="mx-auto max-w-2xl px-6">
         {/* Back link */}
         <Link
-          href="/"
-          className="text-sm text-blue-600 hover:text-blue-500 mb-8 inline-block"
+          href="/blog"
+          className="font-mono text-xs uppercase tracking-wide text-neutral-400 hover:text-neutral-900 transition-colors mb-10 inline-block"
         >
-          ← Back to Home
+          ← Blog
         </Link>
 
         {/* Article header */}
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 leading-tight">
-            {article.title}
-          </h1>
-          <div className="mt-4 flex items-center gap-3 text-gray-600">
+        <header className="mb-10">
+          <div className="flex items-center gap-3 font-mono text-xs text-neutral-400 mb-4">
             <time>{formatDate(article.date)}</time>
             {article.author && (
               <>
-                <span>•</span>
+                <span>/</span>
                 <span>{article.author.name}</span>
               </>
             )}
           </div>
+          <h1 className="text-3xl tracking-tight text-neutral-900 leading-tight">
+            {article.title}
+          </h1>
           {article.description && (
-            <p className="mt-4 text-lg text-gray-600 border-l-4 border-blue-500 pl-4">
+            <p className="mt-4 text-neutral-500 font-light border-l border-neutral-200 pl-4">
               {article.description}
             </p>
           )}
         </header>
 
         {/* Article content */}
-        <article className="prose prose-lg max-w-none">
+        <article>
           {article.content.length > 0 ? (
             article.content.map((block) => (
               <BlockRenderer key={block.id} block={block} />
             ))
           ) : (
-            <p className="text-gray-500 italic">
-              Full article content coming soon. Add content to this page in Notion.
+            <p className="font-mono text-sm text-neutral-400">
+              // Content coming soon
             </p>
           )}
         </article>
 
         {/* Footer */}
-        <footer className="mt-12 pt-8 border-t border-gray-200">
+        <footer className="mt-14 pt-8 border-t border-neutral-200">
           <Link
-            href="/"
-            className="text-blue-600 hover:text-blue-500"
+            href="/blog"
+            className="font-mono text-xs uppercase tracking-wide text-neutral-400 hover:text-neutral-900 transition-colors"
           >
-            ← Back to all news
+            ← All articles
           </Link>
         </footer>
       </div>

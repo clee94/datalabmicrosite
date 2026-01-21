@@ -4,31 +4,35 @@ export const revalidate = 60;
 
 function PersonCard({ person, showYear = false }: { person: Person; showYear?: boolean }) {
   return (
-    <div className="flex flex-col items-center text-center p-6 rounded-lg border border-gray-200 bg-white">
-      <div className="h-32 w-32 rounded-full bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center">
-        <span className="text-4xl">👤</span>
+    <div className="border border-neutral-200 p-5">
+      <div className="flex items-start gap-4">
+        <div className="h-12 w-12 bg-neutral-100 flex items-center justify-center shrink-0 font-mono text-xs text-neutral-400">
+          {person.name.split(' ').map(n => n[0]).join('')}
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-mono text-sm text-neutral-900">{person.name}</h3>
+          <p className="text-xs text-neutral-500 mt-0.5">
+            {person.role}
+            {showYear && person.year && ` / ${person.year}`}
+          </p>
+        </div>
       </div>
-      <h3 className="mt-4 text-lg font-semibold text-gray-900">{person.name}</h3>
-      <p className="text-sm text-blue-600">{person.role}</p>
-      {showYear && person.year && (
-        <p className="text-sm text-gray-500">{person.year}</p>
-      )}
       {person.bio && (
-        <p className="mt-2 text-sm text-gray-600">{person.bio}</p>
+        <p className="mt-3 text-sm text-neutral-500 font-light">{person.bio}</p>
       )}
       {person.currentPosition && (
-        <p className="mt-2 text-sm text-gray-600">Now: {person.currentPosition}</p>
+        <p className="mt-2 text-sm text-neutral-500 font-light">Now: {person.currentPosition}</p>
       )}
       {(person.website || person.email) && (
         <div className="mt-3 flex gap-3">
           {person.website && (
-            <a href={person.website} className="text-sm text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
-              Website
+            <a href={person.website} className="font-mono text-xs text-neutral-500 hover:text-neutral-900 transition-colors" target="_blank" rel="noopener noreferrer">
+              [web]
             </a>
           )}
           {person.email && (
-            <a href={`mailto:${person.email}`} className="text-sm text-blue-600 hover:underline">
-              Email
+            <a href={`mailto:${person.email}`} className="font-mono text-xs text-neutral-500 hover:text-neutral-900 transition-colors">
+              [email]
             </a>
           )}
         </div>
@@ -61,22 +65,22 @@ export default async function PeoplePage() {
 
   return (
     <div className="py-16">
-      <div className="mx-auto max-w-6xl px-6">
-        <h1 className="text-4xl font-bold text-gray-900">People</h1>
-        <p className="mt-4 text-lg text-gray-600">
+      <div className="mx-auto max-w-5xl px-6">
+        <h1 className="text-3xl tracking-tight text-neutral-900">People</h1>
+        <p className="mt-3 text-neutral-500 font-light">
           Meet the researchers and students of Protege Data Lab.
         </p>
 
         {showPlaceholder && (
-          <p className="mt-4 text-sm text-gray-500 italic">
-            Add people in Notion to see them here.
+          <p className="mt-4 font-mono text-sm text-neutral-400">
+            // Placeholder data
           </p>
         )}
 
         {/* Faculty */}
-        <section className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900">Faculty</h2>
-          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <section className="mt-14">
+          <h2 className="text-xs font-mono uppercase tracking-wide text-neutral-500 mb-6">Faculty</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {(showPlaceholder ? placeholderFaculty : faculty).map((person) => (
               <PersonCard key={person.id} person={person as Person} />
             ))}
@@ -85,9 +89,9 @@ export default async function PeoplePage() {
 
         {/* Postdocs */}
         {(postdocs.length > 0) && (
-          <section className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900">Postdoctoral Researchers</h2>
-            <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <section className="mt-14">
+            <h2 className="text-xs font-mono uppercase tracking-wide text-neutral-500 mb-6">Postdoctoral Researchers</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {postdocs.map((person) => (
                 <PersonCard key={person.id} person={person} />
               ))}
@@ -96,9 +100,9 @@ export default async function PeoplePage() {
         )}
 
         {/* PhD Students */}
-        <section className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900">PhD Students</h2>
-          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <section className="mt-14">
+          <h2 className="text-xs font-mono uppercase tracking-wide text-neutral-500 mb-6">PhD Students</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {(showPlaceholder ? placeholderPhd : phdStudents).map((person) => (
               <PersonCard key={person.id} person={person as Person} showYear />
             ))}
@@ -106,9 +110,9 @@ export default async function PeoplePage() {
         </section>
 
         {/* Alumni */}
-        <section className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900">Alumni</h2>
-          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <section className="mt-14">
+          <h2 className="text-xs font-mono uppercase tracking-wide text-neutral-500 mb-6">Alumni</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {(showPlaceholder ? placeholderAlumni : alumni).map((person) => (
               <PersonCard key={person.id} person={person as Person} />
             ))}

@@ -37,54 +37,55 @@ export default async function ResearchPage() {
 
   return (
     <div className="py-16">
-      <div className="mx-auto max-w-6xl px-6">
-        <h1 className="text-4xl font-bold text-gray-900">Research</h1>
-        <p className="mt-4 text-lg text-gray-600">
-          Publications, working papers, and ongoing research projects from Protege Data Lab.
+      <div className="mx-auto max-w-5xl px-6">
+        <h1 className="text-3xl tracking-tight text-neutral-900">Research</h1>
+        <p className="mt-3 text-neutral-500 font-light">
+          Publications, working papers, and ongoing research projects.
         </p>
 
         {/* Research Projects */}
-        <section className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900">Research Projects</h2>
+        <section className="mt-14">
+          <h2 className="text-xs font-mono uppercase tracking-wide text-neutral-500 mb-6">Projects</h2>
           {showPlaceholderProjects && (
-            <p className="mt-2 text-sm text-gray-500 italic">
-              Add research projects in Notion to see them here.
+            <p className="mb-4 font-mono text-sm text-neutral-400">
+              // Placeholder data
             </p>
           )}
-          <div className="mt-6 space-y-6">
+          <div className="space-y-4">
             {displayProjects.map((project) => (
-              <div key={project.id} className="rounded-lg border border-gray-200 bg-white p-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900">{project.title}</h3>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+              <div key={project.id} className="border border-neutral-200 p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <h3 className="font-mono text-sm text-neutral-900">{project.title}</h3>
+                    <p className="mt-2 text-sm text-neutral-500 font-light">{project.description}</p>
+                    {project.tags.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="font-mono text-xs text-neutral-400"
+                          >
+                            [{tag}]
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    {project.team && (
+                      <p className="mt-3 font-mono text-xs text-neutral-400">
+                        Team: {project.team}
+                      </p>
+                    )}
                   </div>
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                    className={`font-mono text-xs shrink-0 ${
                       project.status === 'Active'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'text-green-600'
+                        : 'text-neutral-400'
                     }`}
                   >
                     {project.status}
                   </span>
                 </div>
-                <p className="mt-4 text-gray-600">{project.description}</p>
-                {project.team && (
-                  <div className="mt-4">
-                    <span className="text-sm font-medium text-gray-500">Team: </span>
-                    <span className="text-sm text-gray-700">{project.team}</span>
-                  </div>
-                )}
               </div>
             ))}
           </div>
@@ -92,43 +93,43 @@ export default async function ResearchPage() {
 
         {/* Publications */}
         <section className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900">Publications</h2>
+          <h2 className="text-xs font-mono uppercase tracking-wide text-neutral-500 mb-6">Publications</h2>
           {showPlaceholderPubs && (
-            <p className="mt-2 text-sm text-gray-500 italic">
-              Add publications in Notion to see them here.
+            <p className="mb-4 font-mono text-sm text-neutral-400">
+              // Placeholder data
             </p>
           )}
-          <div className="mt-6 space-y-10">
+          <div className="space-y-10">
             {years.map((year) => (
               <div key={year}>
-                <h3 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2">
+                <h3 className="font-mono text-sm text-neutral-900 border-b border-neutral-200 pb-2 mb-4">
                   {year}
                 </h3>
-                <ul className="mt-4 space-y-6">
+                <ul className="space-y-5">
                   {pubsByYear[year].map((paper) => (
-                    <li key={paper.id} className="border-l-2 border-blue-200 pl-4">
-                      <h4 className="text-lg font-semibold text-gray-900">{paper.title}</h4>
-                      <p className="mt-1 text-gray-600">{paper.authors}</p>
-                      <p className="text-sm font-medium text-blue-600">{paper.venue}</p>
-                      <div className="mt-2 flex gap-4">
+                    <li key={paper.id} className="border-l border-neutral-200 pl-4">
+                      <h4 className="text-base text-neutral-900">{paper.title}</h4>
+                      <p className="mt-1 text-sm text-neutral-500 font-light">{paper.authors}</p>
+                      <p className="font-mono text-xs text-neutral-400 mt-1">{paper.venue}</p>
+                      <div className="mt-2 flex gap-3">
                         {paper.paperUrl && (
                           <a
                             href={paper.paperUrl}
-                            className="text-sm text-gray-500 hover:text-blue-600"
+                            className="font-mono text-xs text-neutral-500 hover:text-neutral-900 transition-colors"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            [Paper]
+                            [paper]
                           </a>
                         )}
                         {paper.codeUrl && (
                           <a
                             href={paper.codeUrl}
-                            className="text-sm text-gray-500 hover:text-blue-600"
+                            className="font-mono text-xs text-neutral-500 hover:text-neutral-900 transition-colors"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            [Code]
+                            [code]
                           </a>
                         )}
                       </div>
