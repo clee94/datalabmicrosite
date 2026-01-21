@@ -66,12 +66,12 @@ export default async function Home() {
                 </Link>
               </div>
             </div>
-            <div className="relative h-64 lg:h-80 overflow-hidden border border-[var(--cloud)]">
+            <div className="relative h-64 lg:h-80 overflow-hidden">
               <Image
                 src="/images/data-visualization.png"
-                alt="Data visualization showing AI model comparisons"
+                alt="Bar graph showing AI model comparisons"
                 fill
-                className="object-cover object-left"
+                className="object-cover object-[100%_50%] scale-125"
                 priority
               />
             </div>
