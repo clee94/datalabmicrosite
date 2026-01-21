@@ -1,43 +1,39 @@
 import Link from 'next/link';
+import { getNews, getResearchProjects } from '@/lib/notion';
 
-// Placeholder data - will be replaced with Notion data
-const news = [
-  {
-    date: 'January 2025',
-    title: 'New paper accepted at ICML 2025',
-    description: 'Our work on scalable data pipelines has been accepted.',
-  },
-  {
-    date: 'December 2024',
-    title: 'Lab wins Best Paper Award',
-    description: 'Congratulations to the team for this achievement.',
-  },
-  {
-    date: 'November 2024',
-    title: 'Welcome new PhD students',
-    description: 'We are excited to welcome three new members to the lab.',
-  },
-];
+// Revalidate every 60 seconds
+export const revalidate = 60;
 
-const researchHighlights = [
-  {
-    title: 'Data Infrastructure',
-    description: 'Building scalable systems for data processing and management.',
-    image: '/placeholder-research-1.jpg',
-  },
-  {
-    title: 'Machine Learning',
-    description: 'Developing novel ML algorithms for real-world applications.',
-    image: '/placeholder-research-2.jpg',
-  },
-  {
-    title: 'Data Visualization',
-    description: 'Creating intuitive interfaces for complex data exploration.',
-    image: '/placeholder-research-3.jpg',
-  },
-];
+export default async function Home() {
+  const [news, researchProjects] = await Promise.all([
+    getNews().catch(() => []),
+    getResearchProjects().catch(() => []),
+  ]);
 
-export default function Home() {
+  // Use Notion data if available, otherwise show placeholder
+  const displayNews = news.length > 0 ? news.slice(0, 3) : [
+    { id: '1', date: 'January 2025', title: 'New paper accepted at ICML 2025', description: 'Our work on scalable data pipelines has been accepted.' },
+    { id: '2', date: 'December 2024', title: 'Lab wins Best Paper Award', description: 'Congratulations to the team for this achievement.' },
+    { id: '3', date: 'November 2024', title: 'Welcome new PhD students', description: 'We are excited to welcome three new members to the lab.' },
+  ];
+
+  const displayResearch = researchProjects.length > 0 ? researchProjects.slice(0, 3) : [
+    { id: '1', title: 'Data Infrastructure', description: 'Building scalable systems for data processing and management.', tags: [] },
+    { id: '2', title: 'Machine Learning', description: 'Developing novel ML algorithms for real-world applications.', tags: [] },
+    { id: '3', title: 'Data Visualization', description: 'Creating intuitive interfaces for complex data exploration.', tags: [] },
+  ];
+
+  // Format date for display
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    try {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    } catch {
+      return dateStr;
+    }
+  };
+
   return (
     <div>
       {/* Hero Section */}
@@ -73,20 +69,19 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-bold text-gray-900">Latest News</h2>
           <div className="mt-8 space-y-6">
-            {news.map((item, index) => (
-              <div key={index} className="border-l-4 border-blue-600 pl-4">
-                <p className="text-sm font-medium text-blue-600">{item.date}</p>
+            {displayNews.map((item) => (
+              <div key={item.id} className="border-l-4 border-blue-600 pl-4">
+                <p className="text-sm font-medium text-blue-600">{formatDate(item.date)}</p>
                 <h3 className="mt-1 text-lg font-semibold text-gray-900">{item.title}</h3>
                 <p className="mt-1 text-gray-600">{item.description}</p>
               </div>
             ))}
           </div>
-          <Link
-            href="/news"
-            className="mt-6 inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
-          >
-            View all news &rarr;
-          </Link>
+          {news.length === 0 && (
+            <p className="mt-4 text-sm text-gray-500 italic">
+              Add news items in Notion to see them here.
+            </p>
+          )}
         </div>
       </section>
 
@@ -95,13 +90,22 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl font-bold text-gray-900">Research Highlights</h2>
           <div className="mt-8 grid gap-8 md:grid-cols-3">
-            {researchHighlights.map((item, index) => (
-              <div key={index} className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+            {displayResearch.map((item) => (
+              <div key={item.id} className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
                 <div className="h-40 w-full rounded-md bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center">
                   <span className="text-4xl">📊</span>
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-gray-900">{item.title}</h3>
                 <p className="mt-2 text-sm text-gray-600">{item.description}</p>
+                {item.tags && item.tags.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {item.tags.map((tag) => (
+                      <span key={tag} className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -110,7 +114,7 @@ export default function Home() {
               href="/research"
               className="text-sm font-medium text-blue-600 hover:text-blue-500"
             >
-              View all research &rarr;
+              View all research →
             </Link>
           </div>
         </div>
