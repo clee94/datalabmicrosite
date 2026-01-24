@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import DataCollectionGame from '@/components/DataCollectionGame';
+import { FEATURES } from '@/config/features';
 
 export default function Home() {
   const [showGame, setShowGame] = useState(false);
@@ -71,12 +72,14 @@ export default function Home() {
                 >
                   Join Us
                 </Link>
-                <button
-                  onClick={() => setShowGame(true)}
-                  className="border border-[var(--orange)] bg-[var(--orange)] px-5 py-2.5 text-xs font-mono uppercase tracking-wide text-white hover:bg-[var(--purple)] hover:border-[var(--purple)] transition-colors"
-                >
-                  Collect Data
-                </button>
+                {FEATURES.DATA_COLLECTION_GAME && (
+                  <button
+                    onClick={() => setShowGame(true)}
+                    className="border border-[var(--orange)] bg-[var(--orange)] px-5 py-2.5 text-xs font-mono uppercase tracking-wide text-white hover:bg-[var(--purple)] hover:border-[var(--purple)] transition-colors"
+                  >
+                    Collect Data
+                  </button>
+                )}
               </div>
             </div>
             <div className="relative h-auto lg:min-h-[400px] overflow-hidden flex items-center justify-center bg-[#0a0a0a]">
@@ -152,7 +155,7 @@ export default function Home() {
                 <p className="mt-2 text-sm text-[var(--muted)] font-light group-hover:text-[var(--purple)] transition-colors">{item.description}</p>
                 {item.tags && item.tags.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-1">
-                    {item.tags.map((tag) => (
+                    {item.tags.map((tag: string) => (
                       <span key={tag} className="font-mono text-xs text-[var(--purple)]">
                         [{tag}]
                       </span>
@@ -174,7 +177,9 @@ export default function Home() {
       </section>
 
       {/* Data Collection Game */}
-      {showGame && <DataCollectionGame onClose={() => setShowGame(false)} />}
+      {FEATURES.DATA_COLLECTION_GAME && showGame && (
+        <DataCollectionGame onClose={() => setShowGame(false)} />
+      )}
     </div>
   );
 }
