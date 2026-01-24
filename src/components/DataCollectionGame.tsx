@@ -242,6 +242,18 @@ export default function DataCollectionGame({ onClose }: { onClose: () => void })
     }
   }, [gameActive, BASKET_WIDTH]);
 
+  // Handle touch movement
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (gameRef.current && gameActive && e.touches.length > 0) {
+      e.preventDefault();
+      const rect = gameRef.current.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = touch.clientX - rect.left - BASKET_WIDTH / 2;
+      const maxX = rect.width - BASKET_WIDTH;
+      setBasketX(Math.max(0, Math.min(x, maxX)));
+    }
+  }, [gameActive, BASKET_WIDTH]);
+
   // Handle keyboard movement with momentum
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     // Escape key closes game at any time
@@ -534,17 +546,19 @@ export default function DataCollectionGame({ onClose }: { onClose: () => void })
     };
   }, [gameActive, gameLoop]);
 
-  // Add mouse move and keyboard listeners
+  // Add mouse move, touch, and keyboard listeners
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [handleMouseMove, handleKeyDown, handleKeyUp]);
+  }, [handleMouseMove, handleTouchMove, handleKeyDown, handleKeyUp]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
