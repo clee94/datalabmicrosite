@@ -42,7 +42,7 @@ export default async function BlogPage() {
           </div>
         </div>
         <p className="text-[var(--muted)] font-light">
-          News, insights, and updates from Protege Data Lab.
+          News, insights, and updates from the Protege Data Lab.
         </p>
 
         {articles.length === 0 ? (

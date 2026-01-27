@@ -19,7 +19,7 @@ export default function Navigation() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[var(--cloud)] bg-white">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
-        <Link href="/" className="font-mono text-sm tracking-tight text-[var(--black)] uppercase hover:text-[var(--pro-indigo)] transition-colors">
+        <Link href="/" className="font-mono text-sm tracking-tight text-[var(--black)] uppercase hover:text-[var(--pro-indigo)] transition-colors cursor-pointer z-10">
           Protege Data Lab
         </Link>
         <nav className="hidden md:flex items-center gap-6">

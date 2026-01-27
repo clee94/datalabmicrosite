@@ -8,7 +8,8 @@ export default function ContactPage() {
           <div>
             <h1 className="text-3xl tracking-tight text-[var(--black)]">Contact</h1>
             <p className="mt-3 text-[var(--muted)] font-light">
-              Get in touch with Protege Data Lab.
+              Challenging data diversity issue? Concerned about contamination? Looking for data? Love what we&apos;re doing?
+              <br />Drop us a note!
             </p>
 
             <div className="mt-14 space-y-10">

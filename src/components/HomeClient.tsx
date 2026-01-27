@@ -13,7 +13,7 @@ export default function HomeClient() {
       {FEATURES.DATA_COLLECTION_GAME && (
         <button
           onClick={() => setShowGame(true)}
-          className="border border-[var(--orange)] bg-[var(--orange)] px-5 py-2.5 text-xs font-mono uppercase tracking-wide text-white hover:bg-[var(--purple)] hover:border-[var(--purple)] transition-colors"
+          className="border border-[var(--orange)] bg-[var(--orange)] px-5 py-2.5 text-xs font-mono uppercase tracking-wide text-white hover:bg-[var(--purple)] hover:border-[var(--purple)] transition-colors cursor-pointer"
           id="collect-data-button"
         >
           Collect Data

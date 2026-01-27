@@ -124,10 +124,10 @@ export default function DataCollectionGame({ onClose }: { onClose: () => void })
   };
 
   // Save leaderboard to localStorage
-  const saveLeaderboard = (newLeaderboard: LeaderboardEntry[]) => {
+  const saveLeaderboard = useCallback((newLeaderboard: LeaderboardEntry[]) => {
     localStorage.setItem('dataGameLeaderboard', JSON.stringify(newLeaderboard));
     setLeaderboard(newLeaderboard);
-  };
+  }, []);
 
   // Get high score
   const highScore = leaderboard.length > 0 ? leaderboard[0] : null;
@@ -157,6 +157,25 @@ export default function DataCollectionGame({ onClose }: { onClose: () => void })
     }
   }, [countdown, gameState]);
 
+  // End game
+  const endGame = useCallback(() => {
+    setGameActive(false);
+    setGameState('ended');
+
+    // Update total data collected
+    const newTotal = totalDataCollected + score;
+    setTotalDataCollected(newTotal);
+    localStorage.setItem('totalDataCollected', newTotal.toString());
+
+    // Check if score makes top 5
+    const isTopFive = leaderboard.length < 5 || score > leaderboard[leaderboard.length - 1].score;
+    setShowNameInput(isTopFive);
+
+    if (!isTopFive) {
+      setShowPlayAgain(true);
+    }
+  }, [totalDataCollected, score, leaderboard]);
+
   // Game timer
   useEffect(() => {
     if (gameState === 'playing' && timeLeft > 0) {
@@ -167,47 +186,28 @@ export default function DataCollectionGame({ onClose }: { onClose: () => void })
     } else if (gameState === 'playing' && timeLeft === 0) {
       endGame();
     }
-  }, [timeLeft, gameState]);
-
-  // End game
-  const endGame = () => {
-    setGameActive(false);
-    setGameState('ended');
-    
-    // Update total data collected
-    const newTotal = totalDataCollected + score;
-    setTotalDataCollected(newTotal);
-    localStorage.setItem('totalDataCollected', newTotal.toString());
-    
-    // Check if score makes top 5
-    const isTopFive = leaderboard.length < 5 || score > leaderboard[leaderboard.length - 1].score;
-    setShowNameInput(isTopFive);
-    
-    if (!isTopFive) {
-      setShowPlayAgain(true);
-    }
-  };
+  }, [timeLeft, gameState, endGame]);
 
   // Handle name submission
-  const handleNameSubmit = () => {
+  const handleNameSubmit = useCallback(() => {
     if (playerName.length < 1 || playerName.length > 4) return;
-    
+
     const newEntry: LeaderboardEntry = {
       name: playerName.toUpperCase(),
       score: score,
     };
-    
+
     const newLeaderboard = [...leaderboard, newEntry]
       .sort((a, b) => b.score - a.score)
       .slice(0, 5);
-    
+
     saveLeaderboard(newLeaderboard);
     setShowNameInput(false);
     setShowPlayAgain(true);
-  };
+  }, [playerName, score, leaderboard, saveLeaderboard]);
 
   // Reset game
-  const resetGame = () => {
+  const resetGame = useCallback(() => {
     setScore(0);
     setBlocks([]);
     setBasketVelocity(0);
@@ -224,13 +224,13 @@ export default function DataCollectionGame({ onClose }: { onClose: () => void })
     lastLogoSpawnTime.current = 0;
     gameStartTime.current = 0;
     keysPressed.current.clear();
-  };
+  }, []);
 
   // Handle close
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setGameActive(false);
     onClose();
-  };
+  }, [onClose]);
 
   // Handle mouse movement
   const handleMouseMove = useCallback((e: MouseEvent) => {
@@ -295,7 +295,7 @@ export default function DataCollectionGame({ onClose }: { onClose: () => void })
         }
       }
     }
-  }, [gameActive, showNameInput, showPlayAgain, playerName, playAgainSelection, handleClose]);
+  }, [gameActive, showNameInput, showPlayAgain, playerName, playAgainSelection, handleClose, handleNameSubmit, resetGame]);
 
   const handleKeyUp = useCallback((e: KeyboardEvent) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {

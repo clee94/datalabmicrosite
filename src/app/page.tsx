@@ -79,7 +79,7 @@ export default async function Home() {
       {displayNews.length > 0 && (
         <section className="py-16">
           <div className="mx-auto max-w-5xl px-6">
-            <h2 className="text-2xl font-mono uppercase tracking-wide text-[var(--orange)] mb-8">Latest News</h2>
+            <Link href="/blog" className="text-2xl font-mono uppercase tracking-wide text-[var(--orange)] hover:text-[var(--orange)]/70 transition-colors mb-8 block">Latest News</Link>
             <div className="space-y-0 divide-y divide-[var(--cloud)]/50">
               {displayNews.map((item) => (
                 <Link
@@ -112,33 +112,41 @@ export default async function Home() {
       {/* Research Highlights */}
       <section className="border-t border-[var(--cloud)] py-16">
         <div className="mx-auto max-w-5xl px-6">
-          <h2 className="text-2xl font-mono uppercase tracking-wide text-[var(--purple)] mb-8">Research</h2>
-
-          {/* Pixelated Data Imagery */}
-          <div className="relative h-32 mb-8 overflow-hidden border border-[var(--cloud)]">
-            <Image
-              src="/images/pixelated-data.png"
-              alt="Pixelated data imagery representing Healthcare, Biology, and Audio & Speech domains"
-              fill
-              className="object-cover object-center"
-            />
-          </div>
+          <Link href="/research" className="text-2xl font-mono uppercase tracking-wide text-[var(--purple)] hover:text-[var(--purple)]/70 transition-colors mb-8 block">Research</Link>
 
           <div className="grid gap-6 md:grid-cols-3">
             {displayResearch.map((item) => (
-              <div key={item.id} className="group border border-[var(--cloud)] p-5 hover:border-[var(--purple)]/30 transition-colors">
-                <h3 className="font-mono text-sm text-[var(--black)] group-hover:text-[var(--purple)] transition-colors">{item.title}</h3>
-                <p className="mt-2 text-sm text-[var(--muted)] font-light group-hover:text-[var(--purple)] transition-colors">{item.description}</p>
-                {item.tags && item.tags.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-1">
-                    {item.tags.map((tag: string) => (
-                      <span key={tag} className="font-mono text-xs text-[var(--purple)]">
-                        [{tag}]
-                      </span>
-                    ))}
+              <Link
+                key={item.id}
+                href={`/research/${item.id}`}
+                className="group border border-[var(--cloud)] hover:border-[var(--purple)]/30 transition-colors flex flex-col"
+              >
+                {/* Preview Image */}
+                {item.previewImage && (
+                  <div className="w-full h-48 relative overflow-hidden bg-[var(--cloud)]/20">
+                    <Image
+                      src={item.previewImage}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 )}
-              </div>
+                {/* Content */}
+                <div className="p-5 flex-1 flex flex-col">
+                  <h3 className="font-mono text-sm text-[var(--black)] group-hover:text-[var(--purple)] transition-colors">{item.title}</h3>
+                  <p className="mt-2 text-sm text-[var(--muted)] font-light group-hover:text-[var(--purple)] transition-colors flex-1">{item.description}</p>
+                  {item.tags && item.tags.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-1">
+                      {item.tags.map((tag: string) => (
+                        <span key={tag} className="font-mono text-xs text-[var(--purple)]">
+                          [{tag}]
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Link>
             ))}
           </div>
           <div className="mt-8">

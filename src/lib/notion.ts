@@ -44,6 +44,18 @@ function getRichText(richText: any[]): string {
   return richText?.map((t: any) => t.plain_text).join('') || '';
 }
 
+// Helper to extract image URL from Notion files field
+function getFileUrl(files: any[]): string {
+  if (!files || files.length === 0) return '';
+  const file = files[0];
+  if (file.type === 'external') {
+    return file.external?.url || '';
+  } else if (file.type === 'file') {
+    return file.file?.url || '';
+  }
+  return '';
+}
+
 // Types
 export interface NewsItem {
   id: string;
@@ -65,6 +77,8 @@ export interface Person {
   website?: string;
   linkedin?: string;
   twitter?: string;
+  googleScholar?: string;
+  photo?: string;
   year?: string;
   currentPosition?: string;
   order: number;
@@ -85,9 +99,14 @@ export interface ResearchProject {
   title: string;
   description: string;
   status: string;
+  articleType: string;
   tags: string[];
   team: string;
   order: number;
+  featuredOnHome: boolean;
+  date: string;
+  authors: string;
+  previewImage: string;
 }
 
 // Query helper - using type assertion due to incomplete SDK types
@@ -277,6 +296,8 @@ export async function getPeople(): Promise<Person[]> {
     website: page.properties.Website?.url || page.properties['Website URL']?.url || undefined,
     linkedin: page.properties.LinkedIn?.url || page.properties['LinkedIn URL']?.url || undefined,
     twitter: page.properties.X?.url || page.properties['X URL']?.url || undefined,
+    googleScholar: page.properties['Google Scholar']?.url || page.properties['Google Scholar URL']?.url || undefined,
+    photo: getFileUrl(page.properties.Headshot?.files) || getFileUrl(page.properties.Photo?.files) || undefined,
     year: getRichText(page.properties.Year?.rich_text) || undefined,
     currentPosition: getRichText(page.properties['Current Position']?.rich_text) || undefined,
     order: page.properties.Order?.number || 0,
@@ -306,17 +327,110 @@ export async function getPublications(): Promise<Publication[]> {
 export async function getResearchProjects(): Promise<ResearchProject[]> {
   const response = await queryDatabase(
     getResearchDb(),
-    { property: 'Published', checkbox: { equals: true } },
-    [{ property: 'Order', direction: 'ascending' }]
+    { property: 'Published', checkbox: { equals: true } }
   );
 
-  return response.results.map((page: any) => ({
-    id: page.id,
-    title: getRichText(page.properties.Title?.title),
-    description: getRichText(page.properties.Description?.rich_text),
-    status: page.properties.Status?.select?.name || 'Active',
-    tags: page.properties.Tags?.multi_select?.map((t: any) => t.name) || [],
-    team: getRichText(page.properties.Team?.rich_text),
-    order: page.properties.Order?.number || 0,
-  }));
+  // Fetch author details for each project (Author(s) is a relation field)
+  const projects = await Promise.all(
+    response.results.map(async (page: any) => {
+      const authorRelations = page.properties['Author(s)']?.relation || [];
+      let authors = '';
+
+      if (authorRelations.length > 0) {
+        try {
+          const authorNames = await Promise.all(
+            authorRelations.map(async (rel: { id: string }) => {
+              const authorPage = await getPage(rel.id);
+              return getRichText(authorPage.properties.Name?.title);
+            })
+          );
+          authors = authorNames.filter(Boolean).join(', ');
+        } catch {
+          // Author fetch failed, leave empty
+        }
+      }
+
+      return {
+        id: page.id,
+        title: getRichText(page.properties.Title?.title),
+        description: getRichText(page.properties.Description?.rich_text),
+        status: page.properties.Status?.select?.name || 'Active',
+        articleType: page.properties['Article Type']?.select?.name || '',
+        tags: page.properties.Tags?.multi_select?.map((t: any) => t.name) || [],
+        team: getRichText(page.properties.Team?.rich_text),
+        order: page.properties['Order (if featured)']?.number || 0,
+        featuredOnHome: page.properties['Featured on Home?']?.checkbox || false,
+        date: page.properties['Publish Date']?.date?.start || page.created_time || '',
+        authors,
+        previewImage: getFileUrl(page.properties['Preview Image']?.files),
+      };
+    })
+  );
+
+  // Sort: featured items first (by order ascending), then non-featured (by date descending)
+  return projects.sort((a, b) => {
+    // Featured items come first
+    if (a.featuredOnHome && !b.featuredOnHome) return -1;
+    if (!a.featuredOnHome && b.featuredOnHome) return 1;
+
+    // Both featured: sort by order ascending
+    if (a.featuredOnHome && b.featuredOnHome) {
+      return a.order - b.order;
+    }
+
+    // Both not featured: sort by date descending (reverse chronological)
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+}
+
+// Fetch single research article with content
+export async function getResearchArticle(id: string): Promise<(ResearchProject & { content: ContentBlock[] }) | null> {
+  try {
+    const page = await getPage(id);
+
+    // Check if published
+    if (!page.properties.Published?.checkbox) {
+      return null;
+    }
+
+    // Get authors from relation field
+    const authorRelations = page.properties['Author(s)']?.relation || [];
+    let authors = '';
+
+    if (authorRelations.length > 0) {
+      try {
+        const authorNames = await Promise.all(
+          authorRelations.map(async (rel: { id: string }) => {
+            const authorPage = await getPage(rel.id);
+            return getRichText(authorPage.properties.Name?.title);
+          })
+        );
+        authors = authorNames.filter(Boolean).join(', ');
+      } catch {
+        // Author fetch failed, leave empty
+      }
+    }
+
+    // Get page content blocks
+    const blocks = await getBlocks(id);
+    const content = parseBlocks(blocks);
+
+    return {
+      id: page.id,
+      title: getRichText(page.properties.Title?.title),
+      description: getRichText(page.properties.Description?.rich_text),
+      status: page.properties.Status?.select?.name || 'Active',
+      articleType: page.properties['Article Type']?.select?.name || '',
+      tags: page.properties.Tags?.multi_select?.map((t: any) => t.name) || [],
+      team: getRichText(page.properties.Team?.rich_text),
+      order: page.properties['Order (if featured)']?.number || 0,
+      featuredOnHome: page.properties['Featured on Home?']?.checkbox || false,
+      date: page.properties['Publish Date']?.date?.start || page.created_time || '',
+      authors,
+      previewImage: getFileUrl(page.properties['Preview Image']?.files),
+      content,
+    };
+  } catch {
+    return null;
+  }
 }
